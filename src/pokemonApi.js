@@ -10,11 +10,16 @@ async function getPokemonData(){
     let responseData = await response.json();
     let result = responseData;
 
+    // let promiseResponse = await fetch(fullApiUrl).then(data => {
+    //     return data.json();
+    // })
+    // result = promiseResponse;
+
     return result;
 }
 
-async function putDataOnPage(){
-
+async function putDataOnPage(dataToDisplay){
+    document.getElementsByClassName("pokemonName")[0].textContent = dataToDisplay.name;
 }
 
 // Button calls this
@@ -22,7 +27,7 @@ async function getAndDisplayPokemonData(){
     let data = await getPokemonData();
     console.log(data);
 
-    putDataOnPage();
+    putDataOnPage(data);
 }
 
 document.getElementById("create-encounter").addEventListener("click", getAndDisplayPokemonData);
