@@ -2,7 +2,8 @@
 async function getPokemonData(){
     let pokemonApiUrlBase = "https://pokeapi.co/api/v2/pokemon/";
 
-    let randomPokemonNumber = Math.floor(Math.random() * 1025) + 1;
+    // total number of pokemon as of 2024 is 1025 however I am only using the first 386 because those are the only ones I recognise
+    let randomPokemonNumber = Math.floor(Math.random() * 386) + 1;
 
     let fullApiUrl = pokemonApiUrlBase + randomPokemonNumber;
 
@@ -86,3 +87,106 @@ document.getElementById("create-encounter").addEventListener("click", getAndDisp
 
 // let pokemonButton = document.getElementById("create-encounter");
 // pokemonButton.addEventListener("click", getAndDisplayPokemonData);
+
+
+
+async function generateTeamData(){
+    // Below code will work but will take longer than promises.all
+    // let teamArray = [];
+    // for (let index = 0; index < 6; index++) {
+    //     let data = await getPokemonData();
+    //     teamArray.push(data); 
+    // }
+    // return teamArray;
+
+    let promiseAllResult = await Promise.all([
+        getPokemonData(),
+        getPokemonData(),
+        getPokemonData(),
+        getPokemonData(),
+        getPokemonData(),
+        getPokemonData()
+    ]);
+
+    return promiseAllResult;
+}
+
+async function showTeamData(teamToDisplay){
+    let teamDisplaySection = document.getElementById("team-display");
+    teamDisplaySection.innerHTML = "";
+
+    teamToDisplay.forEach((pokemon) => {
+
+        let newPokemonCard = document.createElement("div");
+
+
+        // Pokemon Name
+        let pokemonNameTitle = document.createElement("h3");
+        pokemonNameTitle.textContent = pokemon.name;
+
+        newPokemonCard.appendChild(pokemonNameTitle);
+
+        // Pokemon Image and shiny chance
+        let imageContainer = document.createElement("div");
+        let imageElement = document.createElement("img");
+
+        imageContainer.appendChild(imageElement);
+        
+        let shinyResult = Math.floor(Math.random() * 4);
+        if (shinyResult == 1){
+            imageElement.src = pokemon.sprites.front_shiny;
+            console.log("This one is shiny!");
+        } else {
+            imageElement.src = pokemon.sprites.front_default;
+        }
+
+        newPokemonCard.appendChild(imageContainer);
+
+        // Pokemon Types
+        let type1Display = document.createElement("div");
+        let type2Display = document.createElement("div");
+
+        type1Display.textContent = "Type 1: " + pokemon.types[0].type.name;
+        // Could also be seen as = data.types[0]["type"]["name"]; - does the exact same thing
+
+        if (pokemon.types[1]){
+            // if the data includes a 2nd type, set that as well
+            type2Display.textContent = "Type 2: " + pokemon.types[1].type.name;
+        } else {
+            // if there is no 2nd type, clear the text content
+            type2Display.textContent = "";
+        }
+
+        newPokemonCard.appendChild(type1Display);
+        newPokemonCard.appendChild(type2Display);
+
+        // Pokemon Cry Button
+        let cryUrl = pokemon.cries.latest;
+        let pokemonAudioElement = document.createElement("audio");
+        pokemonAudioElement.src = cryUrl;
+
+        let pokemonAudioPlayButton = document.createElement("button");
+        pokemonAudioPlayButton.textContent = "Play Cry";
+        pokemonAudioPlayButton.addEventListener("click", () => {
+            pokemonAudioElement.volume = 0.1;
+            pokemonAudioElement.play();
+        });
+
+        pokemonAudioPlayButton.appendChild(pokemonAudioElement);
+        newPokemonCard.appendChild(pokemonAudioPlayButton);
+        
+
+        
+
+        // Apply all content to page
+        teamDisplaySection.appendChild(newPokemonCard);
+});
+}
+
+async function getAndShowTeamData(){
+    let teamData = await generateTeamData();
+    console.log(teamData);
+    showTeamData(teamData);
+}
+
+document.getElementById("create-team").addEventListener("click", getAndShowTeamData);
