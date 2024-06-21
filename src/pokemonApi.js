@@ -126,6 +126,22 @@ async function showTeamData(teamToDisplay){
 
         newPokemonCard.appendChild(pokemonNameTitle);
 
+        // Pokemon Image and shiny chance
+        let imageContainer = document.createElement("div");
+        let imageElement = document.createElement("img");
+
+        imageContainer.appendChild(imageElement);
+        
+        let shinyResult = Math.floor(Math.random() * 4);
+        if (shinyResult == 1){
+            imageElement.src = pokemon.sprites.front_shiny;
+            console.log("This one is shiny!");
+        } else {
+            imageElement.src = pokemon.sprites.front_default;
+        }
+
+        newPokemonCard.appendChild(imageContainer);
+
         // Pokemon Types
         let type1Display = document.createElement("div");
         let type2Display = document.createElement("div");
@@ -160,8 +176,7 @@ async function showTeamData(teamToDisplay){
         newPokemonCard.appendChild(pokemonAudioPlayButton);
         
 
-        // Pokemon Image and shiny chance
-
+        
 
         // Apply all content to page
         teamDisplaySection.appendChild(newPokemonCard);
