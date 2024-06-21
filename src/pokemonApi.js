@@ -59,6 +59,17 @@ async function putDataOnPage(dataToDisplay){
     } else {
         imageElement.src = dataToDisplay.sprites.front_default;
     }
+
+    let cryUrl = dataToDisplay.cries.latest;
+    let pokemonAudioElement = document.querySelector(".pokemonCry audio");
+    pokemonAudioElement.src = cryUrl;
+
+    let pokemonAudioPlayButton = document.querySelector(".pokemonCry");
+    pokemonAudioPlayButton.addEventListener("click", function(){
+        pokemonAudioElement.volume = 0.1;
+        pokemonAudioElement.play();
+    });
+
 }
 
 // Button calls this
