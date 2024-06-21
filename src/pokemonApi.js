@@ -2,7 +2,8 @@
 async function getPokemonData(){
     let pokemonApiUrlBase = "https://pokeapi.co/api/v2/pokemon/";
 
-    let randomPokemonNumber = Math.floor(Math.random() * 1025) + 1;
+    // total number of pokemon as of 2024 is 1025 however I am only using the first 386 because those are the only ones I recognise
+    let randomPokemonNumber = Math.floor(Math.random() * 386) + 1;
 
     let fullApiUrl = pokemonApiUrlBase + randomPokemonNumber;
 
@@ -118,11 +119,51 @@ async function showTeamData(teamToDisplay){
 
         let newPokemonCard = document.createElement("div");
 
+
+        // Pokemon Name
         let pokemonNameTitle = document.createElement("h3");
         pokemonNameTitle.textContent = pokemon.name;
 
         newPokemonCard.appendChild(pokemonNameTitle);
 
+        // Pokemon Types
+        let type1Display = document.createElement("div");
+        let type2Display = document.createElement("div");
+
+        type1Display.textContent = "Type 1: " + pokemon.types[0].type.name;
+        // Could also be seen as = data.types[0]["type"]["name"]; - does the exact same thing
+
+        if (pokemon.types[1]){
+            // if the data includes a 2nd type, set that as well
+            type2Display.textContent = "Type 2: " + pokemon.types[1].type.name;
+        } else {
+            // if there is no 2nd type, clear the text content
+            type2Display.textContent = "";
+        }
+
+        newPokemonCard.appendChild(type1Display);
+        newPokemonCard.appendChild(type2Display);
+
+        // Pokemon Cry Button
+        let cryUrl = pokemon.cries.latest;
+        let pokemonAudioElement = document.createElement("audio");
+        pokemonAudioElement.src = cryUrl;
+
+        let pokemonAudioPlayButton = document.createElement("button");
+        pokemonAudioPlayButton.textContent = "Play Cry";
+        pokemonAudioPlayButton.addEventListener("click", () => {
+            pokemonAudioElement.volume = 0.1;
+            pokemonAudioElement.play();
+        });
+
+        pokemonAudioPlayButton.appendChild(pokemonAudioElement);
+        newPokemonCard.appendChild(pokemonAudioPlayButton);
+        
+
+        // Pokemon Image and shiny chance
+
+
+        // Apply all content to page
         teamDisplaySection.appendChild(newPokemonCard);
 });
 }
