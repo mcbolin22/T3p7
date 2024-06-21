@@ -35,12 +35,30 @@ async function putDataOnPage(dataToDisplay){
         type2Display.textContent = "";
     }
 
-    // Wishlist: add random chance to select front_shiny instead of front_default
+    
+
     let imageContainer = document.getElementsByClassName("pokemonImage")[0];
     let imageElement = imageContainer.getElementsByTagName("img")[0];
     imageElement.src = dataToDisplay.sprites.front_default;
     // above is same as below - just more condensed
     // document.querySelector(".pokemonImage img").src = dataToDisplay.sprites.front_default;
+
+    // Wishlist: add random chance to select front_shiny instead of front_default
+
+    // real odds are 1:8192
+    // testing odds are 1:4
+
+    // Generate a random number between 1 and [odds upper limit]
+    // if number is 1, use shiny sprite
+    // else use default sprite
+
+    let shinyResult = Math.floor(Math.random() * 4);
+    if (shinyResult == 1){
+        imageElement.src = dataToDisplay.sprites.front_shiny;
+        console.log("This one is shiny!");
+    } else {
+        imageElement.src = dataToDisplay.sprites.front_default;
+    }
 }
 
 // Button calls this
